@@ -15,15 +15,13 @@ namespace Domain
             {
                 GetType().GetMethod("ApplyOnEvent")
                     ?.MakeGenericMethod(events.GetType())
-                    .Invoke(this, new object[] { e });
+                    .Invoke(this, new[] { e });
             }
         }
 
         public void ApplyOneEvent<TEvent>(TEvent e)
         {
-            var applier = this as IApplyEvent<TEvent>;
-
-            if (applier == null)
+            if (!(this is IApplyEvent<TEvent> applier))
             {
                 throw new InvalidOperationException(
                     $"Aggregate {GetType().Name} does not know how to apply event {e.GetType().Name}");
